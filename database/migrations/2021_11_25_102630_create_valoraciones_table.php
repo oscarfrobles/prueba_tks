@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePlanificacionesTable extends Migration
+class CreateValoracionesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,10 @@ class CreatePlanificacionesTable extends Migration
      */
     public function up()
     {
-        Schema::create('planificaciones', function (Blueprint $table) {
+        Schema::create('valoraciones', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->id();
+            $table->string('txt_value');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreatePlanificacionesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('planificaciones');
+        Schema::dropIfExists('valoraciones');
     }
 }
