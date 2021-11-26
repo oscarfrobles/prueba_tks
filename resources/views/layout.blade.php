@@ -32,7 +32,7 @@
                         </ul>
                     </nav>
                 </div>
-                <div class="col-6">
+                <div class="col-6 mt-2">
                         <ul class="menu">
                         @guest
                         
@@ -48,9 +48,7 @@
                             </li>
                         @endif
                         @else
-                            <li>Conectado como: 
-                               
-                                    {{ strtoupper(Auth::user()->name) }}
+                            <li>Conectado como: {{ strtoupper(Auth::user()->name) }}
                                
                             </li>
                             <li>
