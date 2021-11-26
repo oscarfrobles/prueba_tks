@@ -11,7 +11,6 @@ use App\Helpers\Helpers;
 class PlanificacionesController extends Controller
 {
     public function index(){
-
         return view('planificaciones.index')->with('planificaciones', Planificaciones::all());
     }
 
