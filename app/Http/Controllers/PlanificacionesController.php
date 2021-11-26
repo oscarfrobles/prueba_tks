@@ -65,10 +65,11 @@ class PlanificacionesController extends Controller
 
     public function destroy()
     {
-        $data = request::all();
-        $id = (integer) $data['id'];
+        $data = request()->all();
+        $id = (integer) $data['id'];        
         $planificacion = Planificaciones::find( $id );
+        //return response()->json($planificacion, 200); 
         $planificacion->delete();    
-        Redirect::to('planificaciones/')->with('notice', 'La planificación con id {$id} ha sido borrada');
+        return Redirect::to('planificaciones/')->with('notice', 'La planificación con id '. $id .' ha sido borrada');
     }
 }

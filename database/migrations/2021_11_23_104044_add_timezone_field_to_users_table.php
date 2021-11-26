@@ -16,6 +16,7 @@ class AddTimezoneFieldToUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('timezone', 40)->nullable();
         });
+       
     }
 
     /**

@@ -51,8 +51,13 @@
                         <a href="/planificaciones/{{ $item->id }}/edit">Ver</a>
                      @endif
                  </td>  
-                 <td>
-                  <a href="#">Eliminar</a>
+                 <td>                  
+                     @if (strtoupper(Auth::user()->name) == 'ADMIN')
+                     <a href="#" onclick="event.preventDefault; $('#delete-id').val('{{ $item->id }}'); $('#delete_planificacion-form').submit();">Eliminar</a>
+                     
+                     @else
+                        X
+                     @endif
                  </td>
                </tr>                       
             @endforeach
@@ -61,12 +66,19 @@
          </div>
       </div>
       <div class="row">
-            <div class="col-12"><a onclick="event.preventDefault(); document.getElementById('create_planificacion-form').submit();" href="#">Nueva planificación</a></div>
+            <div class="col-12">
+               @if (strtoupper(Auth::user()->name) == 'ADMIN')
+                  <a onclick="event.preventDefault(); document.getElementById('create_planificacion-form').submit();" href="#">Nueva planificación</a>
+               @endif
+            </div>
       </div>
       @else
       <div class="row">
             <div class="col-12">
-               <p> No se han encontrado planificaciones <a onclick="event.preventDefault(); document.getElementById('create_planificacion-form').submit();" href="#">¿Crear?</a> </p>
+               <p> No se han encontrado planificaciones 
+                  @if (strtoupper(Auth::user()->name) == 'ADMIN')
+                     <a onclick="event.preventDefault(); document.getElementById('create_planificacion-form').submit();" href="#">¿Crear?</a> </p>
+                  @endif
             </div>
       </div>
       @endif 
@@ -79,6 +91,11 @@
    <form id="create_planificacion-form"  method="POST" action="/planificaciones/store">
       {{ csrf_field() }}              
    </form> 
+
+   <form id="delete_planificacion-form" action="/planificaciones/destroy" method="POST">
+      {{ csrf_field() }} 
+    <input id="delete-id" type="hidden" name="id" value="">
+   </form>
 
 
 @endsection

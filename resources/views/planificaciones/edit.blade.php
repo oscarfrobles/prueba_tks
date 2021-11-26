@@ -20,6 +20,9 @@
                <th scope="col"> Usuario </th>
                <th scope="col"> Fecha </th>
                <th scope="col"> Estado </th>
+               @if ($planificaciones->status == 1 && $planificaciones->user_id == Auth::user()->id )
+                  <th scope="col"> Finalizar job </th>
+               @endif
             </tr>
          </thead>
          <tbody>
@@ -28,13 +31,23 @@
            <td> {{ $planificaciones->id }} </td>
            <td> {{ $planificaciones->user_id }}  </td>
            <td> 
-              @if ($planificaciones->status > 0 )
-                   {{ $planificaciones->dt_job }} 
-                @else
-                  <input type='text' id='datetimepicker'>
+              @if (($planificaciones->status == 1 && $planificaciones->user_id != Auth::user()->id) || $planificaciones->status == 2 )
+                   {{ $planificaciones->dt_job }}
+              @else
+                  <input type='text' id='datetimepicker' value="{{ ($planificaciones->dt_job) ? $planificaciones->dt_job : ''}}">
                @endif
             </td>
-           <td> {{ ($planificaciones->status == 2 ) ? 'Completado el trabajo': ($planificaciones->status == 1) ? 'Asignado' : 'Por asignar' }} </td>  
+            <td>  @if ($planificaciones->status == 2 ) 
+                  <span class="verde">Job Completo</span> 
+                  @elseif ($planificaciones->status == 1) 
+                  <span class="naranja">Asignado</span>
+                  @else
+                  <span class="azul">Por asignar</span>
+                  @endif 
+            </td>
+           @if ($planificaciones->status == 1 && $planificaciones->user_id == Auth::user()->id )
+                  <td> Check para finalizar <input type="checkbox" onclick="$('#status').val(2);">  </td>
+           @endif
          </tr>                       
      
          </tbody>
@@ -45,18 +58,20 @@
       </div>
    </div>
 
-   <div class="row">         
-         <div class="col-12">
-               <form id="update_planificacion-form"  method="POST" action="/planificaciones/update">
-                  {{ csrf_field() }}   
-                  <input type="hidden" name="id" value="{{ $planificaciones->id }}"/>   
-                  <input type="hidden" id="dt_job" name="dt_job"/>   
-                  <input type="hidden" id="user_id" name="user_id" value="{{ Auth::user()->id }}"/>
-                  <input type="hidden" name="status" value="1"/>    
-                  <input type="button" id="btn_update_planificacion" value="Actualizar" />
-               </form> 
-         </div>
-   </div>
+   @if ($planificaciones->status < 2 && ($planificaciones->user_id == Auth::user()->id || is_null($planificaciones->user_id)) )
+      <div class="row">         
+            <div class="col-12">
+                  <form id="update_planificacion-form"  method="POST" action="/planificaciones/update">
+                     {{ csrf_field() }}   
+                     <input type="hidden" name="id" value="{{ $planificaciones->id }}"/>   
+                     <input type="hidden" id="dt_job" name="dt_job"/>   
+                     <input type="hidden" id="user_id" name="user_id" value="{{ Auth::user()->id }}"/>
+                     <input type="hidden" id="status" name="status" value="1"/>    
+                     <input type="button" id="btn_update_planificacion" value="Actualizar" />
+                  </form> 
+            </div>
+      </div>
+   @endif
 
   
 
