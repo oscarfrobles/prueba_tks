@@ -29,7 +29,7 @@
                
          <tr>        
            <td> {{ $planificaciones->id }} </td>
-           <td> {{ $planificaciones->user_id }}  </td>
+           <td> {{ $planificaciones->name }}  </td>
            <td> 
               @if (($planificaciones->status == 1 && $planificaciones->user_id != Auth::user()->id) || $planificaciones->status == 2 )
                    {{ $planificaciones->dt_job }}

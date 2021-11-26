@@ -11,11 +11,12 @@ use App\Helpers\Helpers;
 class PlanificacionesController extends Controller
 {
     public function index(){
-        return view('planificaciones.index')->with('planificaciones', Planificaciones::all());
+        $planificaciones = Planificaciones::leftJoin('users', 'users.id', '=', 'planificaciones.user_id')
+                                            ->get(['planificaciones.*', 'users.name']);
+        return view('planificaciones.index')->with('planificaciones', $planificaciones);
     }
 
     public function create(){
-        $user = 
         $planificaciones = new Planificaciones();
         return view('planificaciones.create')->with('planificaciones', $planificaciones);
     }
@@ -48,7 +49,9 @@ class PlanificacionesController extends Controller
 
     public function edit($id){
         $id = (integer) $id;
-        $planificaciones = Planificaciones::find($id);
+        $planificaciones = Planificaciones::leftJoin('users', 'users.id', '=', 'planificaciones.user_id')
+                                            ->get(['planificaciones.*', 'users.name'])
+                                            ->find($id);
         return view('planificaciones.edit')->with('planificaciones', $planificaciones);
     }
 
@@ -68,7 +71,6 @@ class PlanificacionesController extends Controller
         $data = request()->all();
         $id = (integer) $data['id'];        
         $planificacion = Planificaciones::find( $id );
-        //return response()->json($planificacion, 200); 
         $planificacion->delete();    
         return Redirect::to('planificaciones/')->with('notice', 'La planificación con id '. $id .' ha sido borrada');
     }

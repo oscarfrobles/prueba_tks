@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 
+
 class Planificaciones extends Model
 {
     use HasFactory;
@@ -22,6 +23,11 @@ class Planificaciones extends Model
         'user_id',
         'valoracion_id',
     ];
+
+    public function user()
+    {
+        return $this->hasOne(User::class);
+    }
 
     public function getDtJobAttribute($value)
     {

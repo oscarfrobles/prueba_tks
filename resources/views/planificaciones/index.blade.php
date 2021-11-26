@@ -11,14 +11,14 @@
 @endif
 
       Uso horario: {{ Helpers::getUserTimeZone() }}
-
       <div class="row">
          <div class="col-12">
             @guest
             <p> Debes hacer login para acceder a las planificaciones </p>
               
             @else
-            @if($planificaciones->count())
+             @if($planificaciones->count())
+            
             <table class="table">
                  <thead>
                <tr>
@@ -34,7 +34,7 @@
             @foreach($planificaciones as $item)   
                <tr>        
                  <td> {{ $item->id }} </td>
-                 <td> {{ ($item->user_id != NULL) ? $item->user_id : 'No asignado' }}  </td>
+                 <td> {{ ($item->user_id != NULL) ? $item->name : 'No asignado' }}  </td>
                  <td> {{ (!is_null($item->dt_job)) ? $item->dt_job : 'No asignada' }} </td> 
                  <td>  @if ($item->status == 2 ) 
                         <span class="verde">Job Completo</span> 
