@@ -8,9 +8,7 @@ use App\Models\User;
 class UserController extends Controller
 {
     public function index(){
-        //$headers = [];
-        //return response()->json(User::all(), 200, $headers);
-        return view('users.index')->with('users', User::all());;
+        return view('users.index')->with('users', User::all());
     }
 
     public function create(){

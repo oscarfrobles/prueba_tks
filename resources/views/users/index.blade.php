@@ -5,7 +5,7 @@
       <div class="row">
          <div class="col-12">
     @if($users->count())
-          <table class="table table-responsive table-hover">
+          <table class="table">
                <thead>
              <tr>
                <th scope="col"> Nombre </th>

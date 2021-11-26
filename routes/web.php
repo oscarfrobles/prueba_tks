@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PlanificacionesController;
 use App\Models\User;
 
 /*
@@ -30,3 +31,16 @@ Route::get('/users/{id}', [UserController::class, 'show']);
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/planificaciones', [PlanificacionesController::class, 'index']);
+
+Route::get('/planificaciones/create', [PlanificacionesController::class, 'create']);
+
+
+Route::post('/planificaciones/store', [PlanificacionesController::class, 'store']);
+
+Route::get('/planificaciones/{id}/edit', [PlanificacionesController::class, 'edit']);
+
+Route::post('/planificaciones/update', [PlanificacionesController::class, 'update']);
+
+Route::post('/planificaciones/destroy', [PlanificacionesController::class, 'destroy']);
