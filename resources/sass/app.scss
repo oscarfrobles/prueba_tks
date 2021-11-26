@@ -29,6 +29,16 @@ table {
     }
 }
 
+.verde {
+    color: green;
+}
+.naranja {
+    color: orange;
+}
+.azul {
+    color: blue;
+}
+
 @media only screen and (max-width: 768px) {
     body { font-size: 0.9em; }
     .menu li { display: block; }
