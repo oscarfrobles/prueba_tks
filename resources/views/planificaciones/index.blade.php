@@ -27,6 +27,7 @@
                  <th scope="col"> Fecha </th>
                  <th scope="col"> Estado </th>
                  <th scope="col"> Autoasignarla </th>
+                 <th scope="col"> Valoración </th>
                  <th scope="col">Eliminar</th>
               </tr>
            </thead>
@@ -51,6 +52,9 @@
                         <a href="/planificaciones/{{ $item->id }}/edit">Ver</a>
                      @endif
                  </td>  
+                 <td>
+                     {{ $item->txt_value }}
+                 </td>
                  <td>                  
                      @if (strtoupper(Auth::user()->name) == 'ADMIN')
                      <a href="#" onclick="event.preventDefault; $('#delete-id').val('{{ $item->id }}'); $('#delete_planificacion-form').submit();">Eliminar</a>

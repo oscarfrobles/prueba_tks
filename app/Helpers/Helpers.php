@@ -1,5 +1,7 @@
 <?php
 namespace App\Helpers;
+use App\Models\User;
+
 use Illuminate\Support\Facades\App;
 class Helpers {
     static public function getTimeZoneList()
@@ -16,5 +18,10 @@ class Helpers {
 
     static public function getUserTimeZone() {
         return optional(auth()->user())->timezone ?? config('app.timezone');
+    }
+
+    static public function getUserTimeZoneFromId($id) {
+        $user = User::find( $id );
+        return optional($user)->timezone ?? config('app.timezone');
     }
 }

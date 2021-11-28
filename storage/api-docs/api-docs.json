@@ -1,0 +1,68 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Planificaciones",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000"
+        }
+    ],
+    "paths": {
+        "/api/planificaciones": {
+            "get": {
+                "summary": "Mostrar todas las planificaciones",
+                "operationId": "a10be8254efdd129bebdd7bc9ac007aa",
+                "responses": {
+                    "200": {
+                        "description": "Mostrar todas las planificaciones."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "post": {
+                "summary": "Crear planificación",
+                "operationId": "eb3f92fb4d2a4778509d507762f1ace9",
+                "responses": {
+                    "200": {
+                        "description": "Crear planificación."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        },
+        "/api/planificaciones/{id}": {
+            "get": {
+                "summary": "Mostrar planificación con id",
+                "operationId": "d9ef230b1ebcb44c3680abf65383af2f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Planificación id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mostrar planificación con id."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}

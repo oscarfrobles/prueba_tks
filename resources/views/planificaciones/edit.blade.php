@@ -20,6 +20,7 @@
                <th scope="col"> Usuario </th>
                <th scope="col"> Fecha </th>
                <th scope="col"> Estado </th>
+               <th scope="col">Valoración</th>
                @if ($planificaciones->status == 1 && $planificaciones->user_id == Auth::user()->id )
                   <th scope="col"> Finalizar job </th>
                @endif
@@ -45,6 +46,13 @@
                   <span class="azul">Por asignar</span>
                   @endif 
             </td>
+            <td>
+                  @if ($planificaciones->status == 2 ) 
+                     {{ $planificaciones->txt_value }}
+                  @else
+                     <textarea id="txt_value_visible">{{ $planificaciones->txt_value }}</textarea>
+                  @endif
+            </td>
            @if ($planificaciones->status == 1 && $planificaciones->user_id == Auth::user()->id )
                   <td> Check para finalizar <input type="checkbox" onclick="$('#status').val(2);">  </td>
            @endif
@@ -66,7 +74,9 @@
                      <input type="hidden" name="id" value="{{ $planificaciones->id }}"/>   
                      <input type="hidden" id="dt_job" name="dt_job"/>   
                      <input type="hidden" id="user_id" name="user_id" value="{{ Auth::user()->id }}"/>
-                     <input type="hidden" id="status" name="status" value="1"/>    
+                     <input type="hidden" id="status" name="status" value="1"/>   
+                     <input type='hidden' name="valoracion" value="{{ $planificaciones->valoracion_id }}"/> 
+                     <input type='hidden' id="txt_value" name="txt_value"/>
                      <input type="button" id="btn_update_planificacion" value="Actualizar" />
                   </form> 
             </div>
@@ -84,6 +94,13 @@
               $("#btn_update_planificacion").on("click", function(e){
                e.preventDefault(); 
                $('#dt_job').val($('#datetimepicker').val()); 
+               
+               if($('#txt_value_visible').val().length > 0){
+                  $('#txt_value').val($('#txt_value_visible').val());
+               }
+               else{
+                  $('#txt_value').remove();
+               }
                $('#update_planificacion-form').submit();
               });
           });

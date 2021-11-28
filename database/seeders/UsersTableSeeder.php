@@ -26,7 +26,7 @@ class UsersTableSeeder extends Seeder
                 'name' => 'Óscar',
                 'email' => 'oskijob@fake.es',
                 'password' => Hash::make('12345678'),
-                'timezone' => 'Europe/Spain',
+                'timezone' => 'Europe/Madrid',
         ]);
         User::create([
                 'name' => 'John Smith',
