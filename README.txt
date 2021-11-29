@@ -44,3 +44,5 @@ Los trabajos sólo los pueden crear y borrar el admin, desde el CRUD.
 
 - Para generar la documentación he usado swagger que puede ser generada mediante:
     `php artisan l5-swagger:generate`
+
+- Para realizar la prueba he usado PHP/7.3 con Ubuntu 18.04
