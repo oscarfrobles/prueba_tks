@@ -3,6 +3,8 @@ El código lo he subido a github y puede ser descargado mediante
 
 - El archivo .env.RENOMBRAR hay que dejarlo como .env con los datos de la conexión a mysql usada.
 
+- Una vez descargado hay que instalar con composer. `composer install`
+
 Para generar los usuarios de prueba con los distintos timezones de la prueba teclea desde la raiz 
 del proyecto:
 `php artisan db:seed UsersTableSeeder`
