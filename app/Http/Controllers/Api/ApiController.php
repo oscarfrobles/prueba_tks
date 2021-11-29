@@ -8,6 +8,7 @@ use App\Models\Planificaciones;
 use App\Models\Valoraciones;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
+use \Datetime;
 use Auth;
 
 
@@ -186,26 +187,30 @@ class ApiController extends Controller
         //return ['message' => $request->dt_job];
         $no_id = 'No es posible actualizar sin id de planificación y sin estar conectado';
         $no_user_id = 'No existe user_id y es necesario';
+        $no_planificacion = "No existe una planificación con ese id";
         $err_dt_job = 'Es necesario un atributo dt_job con valor de datetime en formato YYYY-mm-dd HH:mm:ss';
         $data = [];
-
+        
         if(!isset($request->id)){
             return ['message' => $no_id];
         }
-        if(!isset($request->dt_job)){
-            return ['message' => $err_dt_job];
-        }
+        
         if(!isset($request->user_id)){
             return ['message' => $no_user_id];
         }        
 
+        $planificacion = Planificaciones::find( $request->id );
+        if($planificacion == NULL){
+            return ['message', $no_planificacion];
+        }
 
         $data['status'] = $request->status;
         $data['user_id']= $request->user_id;
         $user_timezone = Helpers::getUserTimeZoneFromId($request->user_id);
         $tm = date_default_timezone_set($user_timezone);
 
-        $planificacion = Planificaciones::find( $request->id );
+        
+
         $id_valoracion_old = $planificacion->valoracion_id;
 
         if(isset($request->valoracion)){
