@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Planificaciones;
 use App\Models\Valoraciones;
-//use App\Models\User;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Auth;
@@ -196,17 +195,15 @@ class ApiController extends Controller
         if(!isset($request->dt_job)){
             return ['message' => $err_dt_job];
         }
-        //if(!Auth::user()->id || is_null(Auth::user()->id) || Auth::user()->id == 'NULL'){
         if(!isset($request->user_id)){
             return ['message' => $no_user_id];
         }        
 
-        //$data['dt_job'] = $request->dt_job;
+
         $data['status'] = $request->status;
         $data['user_id']= $request->user_id;
         $user_timezone = Helpers::getUserTimeZoneFromId($request->user_id);
         $tm = date_default_timezone_set($user_timezone);
-        //return ['message' => $user_timezone];
 
         $planificacion = Planificaciones::find( $request->id );
         $id_valoracion_old = $planificacion->valoracion_id;
