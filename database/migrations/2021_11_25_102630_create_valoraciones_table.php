@@ -16,7 +16,7 @@ class CreateValoracionesTable extends Migration
         Schema::create('valoraciones', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('txt_value');
+            $table->string('txt_valoraciones');
             $table->timestamps();
         });
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Planificaciones;
 use App\Models\Valoraciones;
+//use App\Models\User;
 use Carbon\Carbon;
 use App\Helpers\Helpers;
 use Auth;
@@ -15,7 +16,7 @@ use Auth;
 /**
 * @OA\Info(title="API Planificaciones", version="1.0")
 *
-* @OA\Server(url="http://127.0.0.1:8000")
+* @OA\Server(url="/")
 */
 class ApiController extends Controller
 {
@@ -37,7 +38,7 @@ class ApiController extends Controller
     {
         $planificaciones = Planificaciones::leftJoin('users', 'users.id', '=', 'planificaciones.user_id')
                                             ->leftJoin('valoraciones', 'valoraciones.id', '=', 'planificaciones.valoracion_id')
-                                            ->get(['planificaciones.*', 'users.name', 'valoraciones.txt_value']);
+                                            ->get(['planificaciones.*', 'users.name', 'valoraciones.txt_valoraciones']);
         return $planificaciones;
     }
 
@@ -52,12 +53,15 @@ class ApiController extends Controller
     *     @OA\Response(
     *         response="default",
     *         description="Ha ocurrido un error."
-    *     )
+    *     ),
+    *      @OA\Response(
+    *          response=419,
+    *          description="Unauthenticated",
+    *      ),
     * )
     */
     public function store(Request $request)
     {
-        $data = request()->all();
         $planificaciones = Planificaciones::create([
             'status' => '0',
         ]);
@@ -66,6 +70,173 @@ class ApiController extends Controller
 
     /**
     * @OA\Get(
+    *     path="/api/planificaciones/{id}",
+    *     summary="Mostrar planificación con id",
+    *      @OA\Parameter(
+    *          name="id",
+    *          description="Planificación id",
+    *          required=true,
+    *          in="path",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+    *      @OA\Parameter(
+    *          name="user_id",
+    *          description="Id de usuario 1 Admin, 2 Oscar[Madrid], 3 John Smith[London], 4 Vinicio del Pozo [Mexico_City]",
+    *          required=false,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="string",
+    *              enum={"1", "2", "3", "4"},
+    *          )
+    *      ),
+    *     @OA\Response(
+    *         response=200,
+    *         description="Mostrar planificación con id."
+    *     ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *     )
+    * )
+    */
+    public function show(Request $request)
+    {
+        if(isset($request->user_id)){
+            $user_timezone = Helpers::getUserTimeZoneFromId($request->user_id);
+            $tm = date_default_timezone_set($user_timezone);
+        }
+        $no_res = ['message' => 'No hay resultados para el id seleccionado'];
+        $planificaciones = Planificaciones::leftJoin('users', 'users.id', '=', 'planificaciones.user_id')
+                                            ->leftJoin('valoraciones', 'valoraciones.id', '=', 'planificaciones.valoracion_id')
+                                            ->get(['planificaciones.*', 'users.name', 'valoraciones.txt_valoraciones'])->find($request->id);
+        $res = (is_null($planificaciones)) ? $no_res : $planificaciones;
+        return $res;
+    }
+
+    /**
+    * @OA\Put(
+    *     path="/api/planificaciones/{id}",
+    *     summary="Modificar planificación con id",
+    *     @OA\Response(
+    *         response=200,
+    *         description="Actualizar planificación."
+    *     ),
+    *     @OA\Parameter(
+    *          name="id",
+    *          description="Planificación id",
+    *          required=true,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="integer"
+    *          )
+    *      ),
+    *     @OA\Parameter(
+    *          name="status",
+    *          description="Status planificación 0 [Creación], 1 [Asignación] ó 2 [Finalizada]",
+    *          required=false,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="string",
+    *              enum={"0", "1", "2"},
+    *          )
+    *      ),
+    *     @OA\Parameter(
+    *          name="dt_job",
+    *          description="Datetime con formato YYYY-mm-dd HH:mm:ss",
+    *          required=false,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="string",
+    *              format="date-time",
+    *          )
+    *      ),
+     *     @OA\Parameter(
+    *          name="valoracion",
+    *          description="String de valoración",
+    *          required=false,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="String"
+    *          )
+    *      ),
+    *      @OA\Parameter(
+    *          name="user_id",
+    *          description="Id de usuario 1 Admin, 2 Oscar[Madrid], 3 John Smith[London], 4 Vinicio del Pozo [Mexico_City]",
+    *          required=true,
+    *          in="query",
+    *          @OA\Schema(
+    *              type="string",
+    *              enum={"1", "2", "3", "4"},
+    *          )
+    *      ),
+    *     @OA\Response(
+    *         response="default",
+    *         description="Ha ocurrido un error."
+    *      ),
+    *     @OA\Response(
+    *          response=419,
+    *          description="Unauthenticated",
+    *      ),
+    * )
+    */
+    public function update(Request $request)
+    {        
+        $planificacion_id = $request->id;
+        //return ['message' => $request->dt_job];
+        $no_id = 'No es posible actualizar sin id de planificación y sin estar conectado';
+        $no_user_id = 'No existe user_id y es necesario';
+        $err_dt_job = 'Es necesario un atributo dt_job con valor de datetime en formato YYYY-mm-dd HH:mm:ss';
+        $data = [];
+
+        if(!isset($request->id)){
+            return ['message' => $no_id];
+        }
+        if(!isset($request->dt_job)){
+            return ['message' => $err_dt_job];
+        }
+        //if(!Auth::user()->id || is_null(Auth::user()->id) || Auth::user()->id == 'NULL'){
+        if(!isset($request->user_id)){
+            return ['message' => $no_user_id];
+        }        
+
+        //$data['dt_job'] = $request->dt_job;
+        $data['status'] = $request->status;
+        $data['user_id']= $request->user_id;
+        $user_timezone = Helpers::getUserTimeZoneFromId($request->user_id);
+        $tm = date_default_timezone_set($user_timezone);
+        //return ['message' => $user_timezone];
+
+        $planificacion = Planificaciones::find( $request->id );
+        $id_valoracion_old = $planificacion->valoracion_id;
+
+        if(isset($request->valoracion)){
+            $valoraciones = Valoraciones::create([
+                'txt_valoraciones' => $request->valoracion,
+            ]);
+            $data['valoracion_id'] = $valoraciones->id;            
+        }
+        
+        try{
+           $dt_job = strtotime($request->dt_job);
+           $data['dt_job'] = Carbon::parse($dt_job, 'UTC')->setTimezone('UTC')->format('Y-m-d H:i:s');           
+           $planificacion->update($data);
+           if(isset($data['valoracion_id'])){
+                $valoracion_old = $valoraciones->find($id_valoracion_old);
+                if($valoracion_old != NULL){
+                    $valoracion_old->delete();
+                }
+           }
+        }
+        catch(Exception $e){
+           echo $e;
+        }
+        return Planificaciones::find( $request->id );
+    }
+
+    /**
+    * @OA\Delete(
     *     path="/api/planificaciones/{id}",
     *     summary="Mostrar planificación con id",
     *      @OA\Parameter(
@@ -87,66 +258,10 @@ class ApiController extends Controller
     *     )
     * )
     */
-    public function show(Request $request)
-    {
-        $no_res = ['message' => 'No hay resultados para el id seleccionado'];
-        $planificaciones = Planificaciones::leftJoin('users', 'users.id', '=', 'planificaciones.user_id')
-                                            ->leftJoin('valoraciones', 'valoraciones.id', '=', 'planificaciones.valoracion_id')
-                                            ->get(['planificaciones.*', 'users.name', 'valoraciones.txt_value'])->find($request->id);
-        $res = (is_null($planificaciones)) ? $no_res : $planificaciones;
-        return $res;
-    }
-
-    /**
-     * Update the specified resource in storage. 
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        $no_id = 'No existe id';
-        $err_dt_job = 'Es necesario un atributo dt_job con valor de datetime en formato YYYY-mm-dd HH:mm:ss';
-        $data = request()->all();
-        
-        if(!is_numeric($id)){
-            return ['message' => $no_id];
-        }
-        if(isset($data['valoracion'])){
-            $valoraciones = Valoraciones::create([
-                'txt_value' => $data['valoracion'],
-            ]);
-            $data['valoracion_id'] = $valoraciones->id;
-        }
-        
-        date_default_timezone_set(Helpers::getUserTimeZone());
-        if(!isset($data['dt_job'])){
-            return ['message' => $err_dt_job];
-        }
-        try{
-            $dt_job = strtotime($data['dt_job']);
-            $data['dt_job'] = Carbon::parse($dt_job, 'UTC')->setTimezone('UTC')->format('Y-m-d H:i:s');
-            $planificacion = Planificaciones::find( $id );
-            $planificacion->update($data);
-        }
-        catch(Exception $e){
-            echo $e;
-        }
-        return $planificacion;
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Request $request)
     {
         $no_res = 'No hay resultados para el id %s seleccionado';
         $res    = 'Planificacion %s borrada';
-        //return ['message' => $request->id];
         $planificaciones = Planificaciones::leftJoin('users', 'users.id', '=', 'planificaciones.user_id')
                                             ->get(['planificaciones.*', 'users.name'])->find($request->id);
         

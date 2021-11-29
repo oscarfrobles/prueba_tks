@@ -53,7 +53,7 @@
                      @endif
                  </td>  
                  <td>
-                     {{ $item->txt_value }}
+                     {{ $item->txt_valoraciones }}
                  </td>
                  <td>                  
                      @if (strtoupper(Auth::user()->name) == 'ADMIN')

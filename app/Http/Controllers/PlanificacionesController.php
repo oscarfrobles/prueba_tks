@@ -15,7 +15,7 @@ class PlanificacionesController extends Controller
     public function index(){       
         $planificaciones = Planificaciones::leftJoin('users', 'users.id', '=', 'planificaciones.user_id')
                                             ->leftJoin('valoraciones', 'valoraciones.id', '=', 'planificaciones.valoracion_id')
-                                            ->get(['planificaciones.*', 'users.name', 'valoraciones.txt_value']);
+                                            ->get(['planificaciones.*', 'users.name', 'valoraciones.txt_valoraciones']);
         return view('planificaciones.index')->with('planificaciones', $planificaciones);
     }
 
@@ -53,7 +53,7 @@ class PlanificacionesController extends Controller
         $id = (integer) $id;
         $planificaciones = Planificaciones::leftJoin('users', 'users.id', '=', 'planificaciones.user_id')
                                           ->leftJoin('valoraciones', 'valoraciones.id', '=', 'planificaciones.valoracion_id')
-                                          ->get(['planificaciones.*', 'users.name', 'valoraciones.txt_value'])
+                                          ->get(['planificaciones.*', 'users.name', 'valoraciones.txt_valoraciones'])
                                           ->find($id);
         return view('planificaciones.edit')->with('planificaciones', $planificaciones);
     }
@@ -67,14 +67,14 @@ class PlanificacionesController extends Controller
         $data['dt_job'] = Carbon::parse($dt_job, 'UTC')->setTimezone('UTC')->format('Y-m-d H:i:s');
         $planificacion = Planificaciones::find( $id );
        
-        if(isset($data['txt_value'])){
+        if(isset($data['txt_valoraciones'])){
             $valoraciones = Valoraciones::create([
-                'txt_value' => $data['txt_value'],
+                'txt_valoraciones' => $data['txt_valoraciones'],
             ]);
             $data['valoracion_id'] = $valoraciones->id;
         }
         $planificacion->update($data);
-        if(isset($data['txt_value']) && isset($data['valoracion'])){
+        if(isset($data['txt_valoraciones']) && isset($data['valoracion'])){
             if(!is_null($data['valoracion'])){
                 $valoracion_delete = Valoraciones::find($data['valoracion']);
                 $valoracion_delete->delete();

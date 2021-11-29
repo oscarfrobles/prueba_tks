@@ -6,7 +6,7 @@
     },
     "servers": [
         {
-            "url": "http://127.0.0.1:8000"
+            "url": "/"
         }
     ],
     "paths": {
@@ -32,6 +32,9 @@
                     },
                     "default": {
                         "description": "Ha ocurrido un error."
+                    },
+                    "419": {
+                        "description": "Unauthenticated"
                     }
                 }
             }
@@ -40,6 +43,118 @@
             "get": {
                 "summary": "Mostrar planificación con id",
                 "operationId": "d9ef230b1ebcb44c3680abf65383af2f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Planificación id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "Id de usuario 1 Admin, 2 Oscar[Madrid], 3 John Smith[London], 4 Vinicio del Pozo [Mexico_City]",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "1",
+                                "2",
+                                "3",
+                                "4"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Mostrar planificación con id."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    }
+                }
+            },
+            "put": {
+                "summary": "Modificar planificación con id",
+                "operationId": "83c1890750cd99f1a73fb6e67b689c37",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "query",
+                        "description": "Planificación id",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Status planificación 0 [Creación], 1 [Asignación] ó 2 [Finalizada]",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "0",
+                                "1",
+                                "2"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "dt_job",
+                        "in": "query",
+                        "description": "Datetime con formato YYYY-mm-dd HH:mm:ss",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time"
+                        }
+                    },
+                    {
+                        "name": "valoracion",
+                        "in": "query",
+                        "description": "String de valoración",
+                        "required": false,
+                        "schema": {
+                            "type": "String"
+                        }
+                    },
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "description": "Id de usuario 1 Admin, 2 Oscar[Madrid], 3 John Smith[London], 4 Vinicio del Pozo [Mexico_City]",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "1",
+                                "2",
+                                "3",
+                                "4"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Actualizar planificación."
+                    },
+                    "default": {
+                        "description": "Ha ocurrido un error."
+                    },
+                    "419": {
+                        "description": "Unauthenticated"
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Mostrar planificación con id",
+                "operationId": "c8af63f52c3517da7fcf5d611b24589a",
                 "parameters": [
                     {
                         "name": "id",

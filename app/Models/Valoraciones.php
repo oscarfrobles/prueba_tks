@@ -10,6 +10,6 @@ class Valoraciones extends Model
     use HasFactory;
 
     protected $fillable = [
-        'txt_value',
+        'txt_valoraciones',
     ];
 }

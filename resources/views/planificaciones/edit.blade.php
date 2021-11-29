@@ -48,9 +48,9 @@
             </td>
             <td>
                   @if ($planificaciones->status == 2 ) 
-                     {{ $planificaciones->txt_value }}
+                     {{ $planificaciones->txt_valoraciones }}
                   @else
-                     <textarea id="txt_value_visible">{{ $planificaciones->txt_value }}</textarea>
+                     <textarea id="txt_valoraciones_visible">{{ $planificaciones->txt_valoraciones }}</textarea>
                   @endif
             </td>
            @if ($planificaciones->status == 1 && $planificaciones->user_id == Auth::user()->id )
@@ -76,7 +76,7 @@
                      <input type="hidden" id="user_id" name="user_id" value="{{ Auth::user()->id }}"/>
                      <input type="hidden" id="status" name="status" value="1"/>   
                      <input type='hidden' name="valoracion" value="{{ $planificaciones->valoracion_id }}"/> 
-                     <input type='hidden' id="txt_value" name="txt_value"/>
+                     <input type='hidden' id="txt_valoraciones" name="txt_valoraciones"/>
                      <input type="button" id="btn_update_planificacion" value="Actualizar" />
                   </form> 
             </div>
@@ -95,11 +95,11 @@
                e.preventDefault(); 
                $('#dt_job').val($('#datetimepicker').val()); 
                
-               if($('#txt_value_visible').val().length > 0){
-                  $('#txt_value').val($('#txt_value_visible').val());
+               if($('#txt_valoraciones_visible').val().length > 0){
+                  $('#txt_valoraciones').val($('#txt_valoraciones_visible').val());
                }
                else{
-                  $('#txt_value').remove();
+                  $('#txt_valoraciones').remove();
                }
                $('#update_planificacion-form').submit();
               });
